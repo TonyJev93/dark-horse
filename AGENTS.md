@@ -2,13 +2,42 @@
 
 ## Table of Contents
 
-1. [Core Principles](#core-principles)
-2. [Communication Rules](#communication-rules)
-3. [Implementation Rules](#implementation-rules)
-4. [Critical Instructions Format](#critical-instructions-format)
-5. [Safety and Security](#safety-and-security)
-6. [Documentation Standards](#documentation-standards)
-7. [Git and Version Control](#git-and-version-control)
+1. [AGENTS.md Writing Guidelines](#agentsmd-writing-guidelines)
+2. [Core Principles](#core-principles)
+3. [Communication Rules](#communication-rules)
+4. [Implementation Rules](#implementation-rules)
+5. [Critical Instructions Format](#critical-instructions-format)
+6. [Safety and Security](#safety-and-security)
+7. [Documentation Standards](#documentation-standards)
+8. [Git and Version Control](#git-and-version-control)
+
+---
+
+## AGENTS.md Writing Guidelines
+
+### Modification Protocol
+```xml
+<critical>
+  <rule priority="high">MUST obtain user approval BEFORE modifying AGENTS.md</rule>
+  <rule priority="high">Show proposed changes and wait for explicit confirmation</rule>
+  <rule priority="high">NEVER auto-update AGENTS.md without user consent</rule>
+</critical>
+```
+- **ALWAYS** ask user before modifying this file
+- Show the exact changes being proposed
+- Wait for explicit approval before applying edits
+
+### Index Synchronization
+```xml
+<critical>
+  <rule priority="high">When Table of Contents is modified, update section numbering</rule>
+  <rule priority="high">When section titles change, update all internal references</rule>
+  <rule priority="high">Ensure all TOC links match actual section headers</rule>
+</critical>
+```
+- Keep Table of Contents in sync with actual sections
+- Update section numbers when adding/removing/reordering sections
+- Verify all anchor links work correctly
 
 ---
 
@@ -119,6 +148,27 @@ Ensure AI strictly follows critical guidelines by using XML markup. All mandator
 - Commit messages in English
 - Group related changes in single commits
 - After completing work, confirm with the user whether to commit
+
+---
+
+## OpenCode Reference
+
+OpenCode 설정 관련 작업 시 참조:
+
+| Resource | Location |
+|----------|----------|
+| **Local Knowledge** | `.agents/knowledge/opencode/INDEX.md` |
+| **Context7 Query** | `/anomalyco/opencode` |
+
+### Quick Access
+
+```
+# 로컬 캐시된 핵심 정보
+Read(.agents/knowledge/opencode/INDEX.md)
+
+# 세부 사항 동적 조회
+query-docs(/anomalyco/opencode, "your query here")
+```
 
 ---
 
