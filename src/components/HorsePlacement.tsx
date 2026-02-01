@@ -13,12 +13,12 @@ export default function HorsePlacement() {
 
   const availableHorses = getAvailableHorses(state.horses);
   const currentPlayer = state.players[state.currentPlayerIndex];
-  const isPlacementComplete = availableHorses.length === 1;
+  const isPlacementComplete = state.horses.length === 7 && state.darkHorseNumber !== null;
 
   const handlePlaceHorse = (horseNumber: HorseNumber, position: "left" | "right") => {
     dispatch({ type: "PLACE_HORSE", payload: { horseNumber, position } });
 
-    if (availableHorses.length === 2) {
+    if (availableHorses.length === 1) {
       dispatch({ type: "DETERMINE_DARK_HORSE" });
     }
   };

@@ -64,9 +64,18 @@ function gameReducer(state: GameState | null, action: GameAction): GameState | n
     case "DETERMINE_DARK_HORSE": {
       if (!state) return null;
       const darkHorse = determineDarkHorse(state.horses);
+      const newHorses = [
+        ...state.horses,
+        {
+          number: darkHorse,
+          position: state.horses.length as typeof state.horses[0]["position"],
+        },
+      ];
       return {
         ...state,
+        horses: newHorses,
         darkHorseNumber: darkHorse,
+        horsesPlaced: newHorses.length,
       };
     }
 
