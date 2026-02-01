@@ -1,12 +1,37 @@
+"use client";
+
+import { GameProvider, useGame } from "@/contexts/GameContext";
+import GameSetup from "@/components/GameSetup";
+import HorsePlacement from "@/components/HorsePlacement";
+import MainGame from "@/components/MainGame";
+import Scoring from "@/components/Scoring";
+
+function GameContent() {
+  const { state } = useGame();
+
+  if (!state) {
+    return <GameSetup />;
+  }
+
+  if (state.phase === "setup" || state.phase === "horse_placement") {
+    return <HorsePlacement />;
+  }
+
+  if (state.phase === "playing") {
+    return <MainGame />;
+  }
+
+  if (state.phase === "scoring" || state.phase === "finished") {
+    return <Scoring />;
+  }
+
+  return <GameSetup />;
+}
+
 export default function Home() {
   return (
-    <main className="min-h-screen p-8">
-      <div className="max-w-4xl mx-auto">
-        <h1 className="text-4xl font-bold mb-4">Dark Horse</h1>
-        <p className="text-lg text-gray-600">
-          Horse Racing Game - Coming Soon
-        </p>
-      </div>
-    </main>
+    <GameProvider>
+      <GameContent />
+    </GameProvider>
   );
 }
