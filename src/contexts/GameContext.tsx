@@ -10,7 +10,6 @@ import type { CardExecutionChoice } from "@/types/game";
 type GameAction =
   | { type: "INITIALIZE_GAME"; payload: { playerNames: string[] } }
   | { type: "PLACE_HORSE"; payload: { horseNumber: HorseNumber; position: "left" | "right" } }
-  | { type: "DETERMINE_DARK_HORSE" }
   | { type: "START_GAME" }
   | { type: "TAKE_DARK_HORSE_TOKEN" }
   | { type: "SKIP_DARK_HORSE_TOKEN" }
@@ -54,27 +53,27 @@ function gameReducer(state: GameState | null, action: GameAction): GameState | n
         action.payload.horseNumber,
         action.payload.position
       );
+      
+      if (newHorses.length === 6) {
+        const darkHorse = determineDarkHorse(newHorses);
+        const horsesWithDark = [
+          ...newHorses,
+          {
+            number: darkHorse,
+            position: newHorses.length as typeof newHorses[0]["position"],
+          },
+        ];
+        return {
+          ...state,
+          horses: horsesWithDark,
+          horsesPlaced: horsesWithDark.length,
+          darkHorseNumber: darkHorse,
+        };
+      }
+      
       return {
         ...state,
         horses: newHorses,
-        horsesPlaced: newHorses.length,
-      };
-    }
-
-    case "DETERMINE_DARK_HORSE": {
-      if (!state) return null;
-      const darkHorse = determineDarkHorse(state.horses);
-      const newHorses = [
-        ...state.horses,
-        {
-          number: darkHorse,
-          position: state.horses.length as typeof state.horses[0]["position"],
-        },
-      ];
-      return {
-        ...state,
-        horses: newHorses,
-        darkHorseNumber: darkHorse,
         horsesPlaced: newHorses.length,
       };
     }

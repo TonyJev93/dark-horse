@@ -17,10 +17,6 @@ export default function HorsePlacement() {
 
   const handlePlaceHorse = (horseNumber: HorseNumber, position: "left" | "right") => {
     dispatch({ type: "PLACE_HORSE", payload: { horseNumber, position } });
-
-    if (availableHorses.length === 1) {
-      dispatch({ type: "DETERMINE_DARK_HORSE" });
-    }
   };
 
   const handleStartGame = () => {
