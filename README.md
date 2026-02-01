@@ -68,8 +68,8 @@ See detailed game rules in:
 ### Current Status
 
 **Phase 1: ✅ Completed** - Project setup and type definitions  
-**Phase 2: 🚧 In Progress** - Core game logic implementation  
-**Phase 3: 📋 Planned** - UI implementation  
+**Phase 2: ✅ Completed** - Core game logic implementation  
+**Phase 3: 📋 Next** - UI implementation  
 **Phase 4: 📋 Planned** - Game flow and state management
 
 See [`.agents/tasks/dark-horse-web-implementation.md`](.agents/tasks/dark-horse-web-implementation.md) for detailed implementation tasks.
