@@ -1,0 +1,442 @@
+# Dark Horse - Web Game Implementation Task
+
+## Project Overview
+
+**Project:** Dark Horse Browser-based Board Game  
+**Platform:** Web (Browser)  
+**Tech Stack:** Next.js + TypeScript  
+**Play Mode:** Local multiplayer (2-6 players on same screen)  
+**Goal:** Implement complete game logic and playable UI
+
+**Note:** No test code required during development
+
+---
+
+## Phase 1: Project Setup & Foundation
+
+### 1.1 Initialize Next.js Project
+
+**Tasks:**
+- [x] Initialize Next.js 14+ with TypeScript
+- [x] Configure project structure
+- [x] Setup Tailwind CSS (or preferred styling solution)
+- [x] Create folder structure:
+  ```
+  src/
+  ├── types/          # Type definitions
+  ├── game/           # Game logic (pure functions)
+  │   ├── setup.ts
+  │   ├── actions.ts
+  │   ├── movement.ts
+  │   ├── scoring.ts
+  │   └── rules.ts
+  ├── components/     # React components
+  ├── hooks/          # Custom React hooks
+  ├── utils/          # Utility functions
+  └── app/            # Next.js app directory
+  ```
+
+### 1.2 Define Core Types
+
+**File:** `src/types/game.ts`
+
+**Type Definitions Needed:**
+- [x] `Horse` - Horse card data (number 1-7, position)
+- [x] `BettingCard` - Betting card (horse number, scoring table)
+- [x] `ActionCard` - Action card types and effects
+  - Standard movement cards
+  - Rider Fall Off card
+  - Exchange Betting card
+- [x] `DarkHorseToken` - Token state (+5/-3 points)
+- [x] `Player` - Player data (id, betting cards, action cards, token)
+- [x] `GameState` - Complete game state
+  - Players array
+  - Horse positions (ordered array)
+  - Current player index
+  - Dark horse number
+  - Phase (setup, playing, scoring)
+  - Turn state
+
+**Implementation Notes:**
+- ✅ Use discriminated unions for ActionCard types
+- ✅ Keep types immutable (readonly where possible)
+- ✅ Document scoring table structure
+
+---
+
+## Phase 2: Core Game Logic Implementation
+
+### 2.1 Game Setup Logic
+
+**File:** `src/game/setup.ts`
+
+**Functions to Implement:**
+- [ ] `createDeck()` - Generate all 33 action cards
+- [ ] `shuffleCards()` - Shuffle action cards
+- [ ] `distributeBettingCards()` - Deal betting cards by player count
+  - 2 players: 3 cards each
+  - 3-6 players: 2 cards each
+- [ ] `distributeActionCards()` - Deal action cards by player count
+  - 2p: 8 cards, 3p: 7 cards, 4p: 6 cards, 5p: 6 cards, 6p: 5 cards
+- [ ] `determineDarkHorse()` - Select 7th (last) horse as dark horse
+- [ ] `placeDarkHorseTokens()` - Set token count by player count
+  - 2p: 1 token, 3-4p: 2 tokens, 5-6p: 3 tokens
+- [ ] `initializeGame()` - Master setup function
+
+**Edge Cases:**
+- Validate player count (2-6)
+- Ensure proper card distribution
+- Handle remaining cards
+
+### 2.2 Horse Placement (Starting Order)
+
+**File:** `src/game/setup.ts`
+
+**Functions to Implement:**
+- [ ] `placeHorseCard()` - Add horse to left or right end
+- [ ] `validateHorsePlacement()` - Check valid placement
+- [ ] `getAvailableHorses()` - Return unplaced horses
+- [ ] `isHorsePlacementComplete()` - Check if all 7 horses placed
+
+**Rules to Enforce:**
+- Can only place at leftmost or rightmost position
+- Cannot insert between existing horses
+- Players take turns clockwise
+- First player places first, then clockwise rotation
+
+### 2.3 Horse Movement Logic
+
+**File:** `src/game/movement.ts`
+
+**Core Movement Function:**
+- [ ] `moveHorse(horses, horseNumber, spaces, direction)` - Main movement logic
+  - Forward movement: Pass N horses, switch with Nth horse
+  - Backward movement: Same logic in reverse
+  - Return new horse positions array
+
+**Helper Functions:**
+- [ ] `getHorsePosition()` - Find current position by horse number
+- [ ] `getHorseRank()` - Get rank (1st = rightmost, 7th = leftmost)
+- [ ] `canMoveForward()` - Check if forward movement possible
+- [ ] `canMoveBackward()` - Check if backward movement possible
+
+**Movement Rules:**
+- Moving forward N spaces = passing N horses
+- Passed horses each drop 1 rank
+- Position switching: moving horse swaps with the Nth horse ahead/behind
+- Edge case: 1st rank moving forward → must move backward
+- Edge case: 7th rank moving backward → must move forward
+
+**Example Implementation Notes:**
+```typescript
+// Initial: [7th: #6][6th: #5][5th: #4][4th: #7][3rd: #1][2nd: #3][1st: #2]
+// Move #4 forward 2 spaces
+// Result: [7th: #6][6th: #5][5th: #7][4th: #1][3rd: #4][2nd: #3][1st: #2]
+// #4 passed #7 and #1 (2 horses), switched with #1
+```
+
+### 2.4 Action Card Execution
+
+**File:** `src/game/actions.ts`
+
+**Action Card Types:**
+1. **Standard Movement Cards**
+   - [ ] Single horse movement (forward/backward N spaces)
+   - [ ] Multiple horse movement (2 horses, same direction)
+
+2. **Special Cards**
+   - [ ] `executeRiderFallOff()` - Move 3rd rank horse to 7th rank
+   - [ ] `executeExchangeBetting()` - Exchange betting card (player or opponent)
+
+**Main Function:**
+- [ ] `executeActionCard(gameState, card, choices)` - Execute any action card
+  - Validate card execution
+  - Apply movement
+  - Update game state
+  - Return new game state
+
+**Validation:**
+- Must execute card even if disadvantageous
+- Both horses must move same direction (for multi-horse cards)
+- Handle edge cases (boundaries)
+
+### 2.5 Turn Management
+
+**File:** `src/game/rules.ts`
+
+**Functions:**
+- [ ] `canTakeDarkHorseToken()` - Check if player can take token
+  - Must not have token already
+  - Must have 2+ cards in hand
+  - Tokens must be available
+- [ ] `takeDarkHorseToken()` - Award token to player
+- [ ] `playActionCard()` - Player plays card
+- [ ] `nextTurn()` - Advance to next player
+- [ ] `isGameOver()` - Check if all cards played
+
+**Turn Sequence Validation:**
+1. Optional: Take dark horse token
+2. Mandatory: Play action card
+3. Mandatory: Execute action card
+
+### 2.6 Scoring System
+
+**File:** `src/game/scoring.ts`
+
+**Scoring Table (on betting cards):**
+Define point values by rank (exact values from game rules):
+```typescript
+const SCORING_TABLE = {
+  1: X, // 1st rank
+  2: X, // 2nd rank
+  3: X, // 3rd rank
+  4: X, // 4th rank
+  5: X, // 5th rank
+  6: X, // 6th rank
+  7: X, // 7th rank
+}
+```
+
+**Functions to Implement:**
+- [ ] `calculateBettingScore()` - Calculate base score from betting cards
+- [ ] `checkDoubleBetting()` - Detect identical betting cards
+- [ ] `applyDoubleBonus()` - Double points for matching cards
+- [ ] `calculateDarkHorseBonus()` - Apply dark horse token points
+  - Top 3 (1st/2nd/3rd): +5 points
+  - Bottom 4 (4th/5th/6th/7th): -3 points
+- [ ] `calculateFinalScore()` - Sum all scoring components
+- [ ] `determineWinner()` - Find highest score player(s)
+
+**Edge Cases:**
+- Multiple players with same score = shared victory
+- Dark horse token scoring based on final rank
+
+---
+
+## Phase 3: UI Implementation
+
+### 3.1 Game Setup Screen
+
+**Components to Create:**
+- [ ] `PlayerCountSelector` - Choose 2-6 players
+- [ ] `PlayerNameInput` - Enter player names (optional)
+- [ ] `StartGameButton` - Initialize game
+
+### 3.2 Horse Placement Phase
+
+**Components:**
+- [ ] `HorseCard` - Display horse number
+- [ ] `HorsePlacementBoard` - Show current horse lineup
+- [ ] `PlacementControls` - Left/Right placement buttons
+- [ ] `CurrentPlayerIndicator` - Show whose turn it is
+
+**Features:**
+- Visual indication of placement direction
+- Disable invalid placements
+- Show available horses to place
+
+### 3.3 Main Game Screen
+
+**Layout Sections:**
+1. **Horse Race Track**
+   - [ ] `RaceTrack` - Display all 7 horses in order
+   - [ ] `HorsePosition` - Show rank (1st to 7th)
+   - [ ] `DarkHorseIndicator` - Highlight dark horse
+
+2. **Player Hand**
+   - [ ] `ActionCardHand` - Show current player's action cards
+   - [ ] `ActionCardDisplay` - Render action card details
+   - [ ] `CardSelector` - Click to select/play card
+
+3. **Game Info Panel**
+   - [ ] `CurrentTurnDisplay` - Show current player
+   - [ ] `DarkHorseTokens` - Show available tokens
+   - [ ] `PlayerTokenIndicator` - Show who has tokens
+   - [ ] `TurnPhaseIndicator` - Show current phase
+
+4. **Action Controls**
+   - [ ] `TakeDarkHorseTokenButton` - Optional token grab
+   - [ ] `PlayCardButton` - Play selected action card
+   - [ ] `ExecuteCardButton` - Execute card effect
+   - [ ] `SkipTokenButton` - Skip token phase
+
+### 3.4 Card Execution Interface
+
+**For Cards Requiring Choices:**
+- [ ] `DirectionSelector` - Choose forward/backward (if applicable)
+- [ ] `PlayerSelector` - Choose opponent for Exchange Betting card
+- [ ] `BettingCardSelector` - Choose which betting card to exchange
+
+**Visual Feedback:**
+- [ ] Highlight affected horses during movement
+- [ ] Animate horse position changes
+- [ ] Show before/after positions
+
+### 3.5 Scoring Screen
+
+**Components:**
+- [ ] `FinalRaceResults` - Show final horse positions
+- [ ] `PlayerScoreCard` - Individual player scoring breakdown
+  - Betting cards revealed
+  - Base scores
+  - Double betting bonuses
+  - Dark horse token bonuses
+  - Total score
+- [ ] `WinnerAnnouncement` - Highlight winner(s)
+- [ ] `NewGameButton` - Start new game
+
+**Features:**
+- Animate score calculation
+- Clear breakdown of scoring components
+- Confetti/celebration for winner
+
+### 3.6 Responsive Design
+
+**Considerations:**
+- [ ] Desktop layout (primary)
+- [ ] Tablet support
+- [ ] Mobile landscape mode (optional)
+
+**UI/UX Guidelines:**
+- Clear visual hierarchy
+- Large touch targets for card selection
+- Readable text at all sizes
+- Color-coded players
+- Accessibility (ARIA labels, keyboard navigation)
+
+---
+
+## Phase 4: Game Flow & State Management
+
+### 4.1 State Management
+
+**Approach:** React Context + useReducer (or Zustand/Redux if preferred)
+
+**State Hooks to Create:**
+- [ ] `useGameState()` - Main game state hook
+- [ ] `useGameActions()` - Game action dispatchers
+- [ ] `useCurrentPlayer()` - Get current player data
+- [ ] `useHorsePositions()` - Get current horse lineup
+
+**Actions:**
+- [ ] `INITIALIZE_GAME`
+- [ ] `PLACE_HORSE`
+- [ ] `TAKE_DARK_HORSE_TOKEN`
+- [ ] `PLAY_ACTION_CARD`
+- [ ] `EXECUTE_ACTION_CARD`
+- [ ] `NEXT_TURN`
+- [ ] `END_GAME`
+- [ ] `CALCULATE_SCORES`
+
+### 4.2 Game Flow Control
+
+**Screen Transitions:**
+1. Setup Screen → Player count, names
+2. Horse Placement → Players place horses
+3. Dark Horse Reveal → Show dark horse, tokens
+4. Main Game Loop → Play cards, execute actions
+5. Scoring Screen → Calculate and display results
+
+**Navigation:**
+- [ ] Implement screen routing
+- [ ] Prevent invalid state transitions
+- [ ] Add confirmation dialogs for critical actions
+
+### 4.3 Local Storage (Optional)
+
+**Persistent Data:**
+- [ ] Save game state to localStorage
+- [ ] Resume interrupted game
+- [ ] Save player preferences
+
+---
+
+## Implementation Notes
+
+### Key Rules to Remember
+
+1. **Horse Movement:**
+   - Forward N = pass N horses, switch with Nth horse
+   - All passed horses drop 1 rank each
+   - Cannot insert, only swap positions
+
+2. **Mandatory Actions:**
+   - Must play card every turn (even if disadvantageous)
+   - Must execute card effect
+   - Cannot skip turn
+
+3. **Dark Horse Token:**
+   - Max 1 per player
+   - Cannot take with only 1 card left in hand
+   - +5 if dark horse finishes top 3
+   - -3 if dark horse finishes bottom 4
+
+4. **Scoring:**
+   - Use scoring table on betting cards
+   - Double bonus applies when 2 identical betting cards
+   - Dark horse = 7th position horse at START of game
+
+### Development Best Practices
+
+- **Pure Functions:** Keep game logic in pure functions (no side effects)
+- **Immutability:** Never mutate state directly, always return new state
+- **Type Safety:** Use TypeScript strictly, avoid `any`
+- **Component Structure:** Keep components small and focused
+- **State Updates:** Batch related state updates together
+- **Performance:** Use React.memo for expensive components if needed
+
+### Reference Documents
+
+- Game Rules: `docs/GAME_RULES.md`
+- Quick Reference: `docs/QUICK_REFERENCE.md`
+
+---
+
+## Progress Tracking
+
+### Current Phase: 1 - ✅ Completed (Phase 1: Project Setup & Foundation)
+
+**Completed:**
+1. ✅ Initialized Next.js 15.1.6 with TypeScript
+2. ✅ Setup project structure (src/types, src/game, src/components, src/hooks, src/utils, src/app)
+3. ✅ Configured Tailwind CSS
+4. ✅ Defined core types in `src/types/game.ts`:
+   - Horse, BettingCard, ActionCard (discriminated unions)
+   - Player, GameState, GamePhase, TurnPhase
+   - PlayerScore, CardExecutionChoice
+   - SCORING_TABLE constant
+
+**Build Status:** ✅ Passing (verified with `npm run build`)
+
+**Next Steps:**
+1. Begin Phase 2: Core Game Logic Implementation
+2. Start with `src/game/setup.ts` - game initialization functions
+3. Implement card distribution and dark horse selection
+
+**Last Updated:** 2026-02-02 23:35 KST
+
+---
+
+## Questions & Decisions Log
+
+**Q1:** Should we implement undo/redo functionality?  
+**A1:** TBD - discuss after core implementation
+
+**Q2:** Card design - use images or pure CSS?  
+**A2:** TBD - start with CSS, can add images later
+
+**Q3:** Animation library needed?  
+**A3:** TBD - can use CSS animations initially, add Framer Motion if needed
+
+---
+
+## Future Enhancements (Post-MVP)
+
+- [ ] Sound effects
+- [ ] Card animations
+- [ ] Game history/replay
+- [ ] Multiple game themes/skins
+- [ ] Statistics tracking
+- [ ] AI opponent mode
+- [ ] Online multiplayer
+- [ ] Mobile app version
