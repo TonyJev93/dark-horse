@@ -97,7 +97,7 @@ function gameReducer(state: GameState | null, action: GameAction): GameState | n
     case "PLAY_ACTION_CARD": {
       if (!state) return null;
       const { gameState: newState } = playActionCard(state, action.payload.cardIndex);
-      return newState;
+      return advanceTurnPhase(newState);
     }
 
     case "EXECUTE_ACTION_CARD": {
