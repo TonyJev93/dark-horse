@@ -121,9 +121,9 @@ export default function HorsePlacement() {
             <div className="text-center">
               <button
                 onClick={handleStartGame}
-                className="bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-8 rounded-lg shadow-lg transition-all hover:shadow-xl hover:scale-105"
+                className="bg-gradient-to-r from-amber-600 to-yellow-600 hover:from-amber-700 hover:to-yellow-700 active:scale-95 text-white font-bold py-4 px-8 rounded-lg shadow-xl transition-all hover:shadow-2xl border-2 border-amber-800"
               >
-                게임 시작 🏁
+                🏁 게임 시작
               </button>
             </div>
           )}

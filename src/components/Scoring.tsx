@@ -20,18 +20,26 @@ export default function Scoring() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-yellow-900 to-yellow-700 p-4">
-      <div className="max-w-6xl mx-auto">
-        <div className="bg-white rounded-2xl shadow-2xl p-8">
+    <div className="min-h-screen bg-gradient-to-br from-yellow-900 via-amber-800 to-yellow-700 p-4 relative overflow-hidden">
+      <div className="absolute inset-0 opacity-20">
+        <div className="absolute top-10 left-10 text-6xl animate-bounce-slow">🏆</div>
+        <div className="absolute top-20 right-20 text-5xl animate-bounce-slow" style={{ animationDelay: '0.5s' }}>⭐</div>
+        <div className="absolute bottom-20 left-20 text-5xl animate-bounce-slow" style={{ animationDelay: '1s' }}>🎉</div>
+        <div className="absolute bottom-10 right-10 text-6xl animate-bounce-slow" style={{ animationDelay: '1.5s' }}>🏇</div>
+      </div>
+      <div className="max-w-6xl mx-auto relative">
+        <div className="bg-gradient-to-br from-amber-50 to-yellow-50 rounded-2xl shadow-2xl p-8 border-4 border-amber-600 animate-fade-in">
           <div className="text-center mb-8">
-            <h1 className="text-5xl font-bold text-yellow-800 mb-4">🏆 게임 종료!</h1>
+            <h1 className="text-5xl font-bold text-amber-900 mb-4 animate-pulse drop-shadow-lg">🏆 게임 종료!</h1>
             {winners.length === 1 ? (
-              <p className="text-2xl text-gray-700">
-                승자: <span className="font-bold text-yellow-600">{winners[0].playerName}</span>
+              <p className="text-2xl text-amber-800">
+                승자: <span className="font-bold text-yellow-600 bg-yellow-100 px-4 py-2 rounded-full inline-block animate-bounce-slow">
+                  🎊 {winners[0].playerName} 🎊
+                </span>
               </p>
             ) : (
-              <p className="text-2xl text-gray-700">
-                무승부: <span className="font-bold text-yellow-600">
+              <p className="text-2xl text-amber-800">
+                무승부: <span className="font-bold text-yellow-600 bg-yellow-100 px-4 py-2 rounded-full inline-block">
                   {winners.map(w => w.playerName).join(", ")}
                 </span>
               </p>
@@ -79,15 +87,15 @@ export default function Scoring() {
               return (
                 <div
                   key={playerScore.playerId}
-                  className={`p-6 rounded-xl border-2 ${
+                  className={`p-6 rounded-xl border-2 transition-all ${
                     isWinner
-                      ? "border-yellow-400 bg-yellow-50 shadow-lg"
-                      : "border-gray-300 bg-gray-50"
+                      ? "border-yellow-400 bg-gradient-to-br from-yellow-50 via-amber-50 to-yellow-100 shadow-2xl ring-4 ring-yellow-300 animate-pulse"
+                      : "border-amber-200 bg-gradient-to-br from-white to-amber-50 shadow-md"
                   }`}
                 >
                   <div className="flex justify-between items-center mb-4">
                     <div>
-                      <h3 className="text-2xl font-bold">
+                      <h3 className={`text-2xl font-bold ${isWinner ? 'text-amber-900' : 'text-gray-800'}`}>
                         {index === 0 && !isWinner && "🥇 "}
                         {index === 1 && !isWinner && "🥈 "}
                         {index === 2 && !isWinner && "🥉 "}
@@ -95,8 +103,13 @@ export default function Scoring() {
                         {playerScore.playerName}
                       </h3>
                     </div>
-                    <div className="text-3xl font-bold text-yellow-600">
+                    <div className={`text-4xl font-bold ${
+                      isWinner 
+                        ? 'text-yellow-600 drop-shadow-lg' 
+                        : 'text-amber-600'
+                    }`}>
                       {playerScore.totalScore}점
+                      {isWinner && " ✨"}
                     </div>
                   </div>
 
@@ -168,9 +181,9 @@ export default function Scoring() {
           <div className="mt-8 text-center">
             <button
               onClick={handleNewGame}
-              className="bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-8 rounded-lg shadow-lg transition-all hover:shadow-xl hover:scale-105"
+              className="bg-gradient-to-r from-amber-600 to-yellow-600 hover:from-amber-700 hover:to-yellow-700 active:scale-95 text-white font-bold py-4 px-8 rounded-lg shadow-xl transition-all hover:shadow-2xl border-2 border-amber-800"
             >
-              새 게임
+              🔄 새 게임
             </button>
           </div>
         </div>
