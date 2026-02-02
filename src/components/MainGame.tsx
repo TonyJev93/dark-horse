@@ -84,22 +84,22 @@ export default function MainGame() {
         <div className="bg-white rounded-2xl shadow-2xl p-6">
           <div className="mb-6">
             <div className="flex justify-between items-center mb-4">
-              <h1 className="text-3xl font-bold text-emerald-800">🏇 Dark Horse</h1>
+              <h1 className="text-3xl font-bold text-emerald-800">🏇 다크호스</h1>
               <div className="text-lg font-semibold text-gray-700">
-                Turn: {currentPlayer.name}
+                턴: {currentPlayer.name}
               </div>
             </div>
 
             <div className="bg-emerald-50 p-4 rounded-lg">
               <div className="flex justify-between items-center">
                 <div className="text-sm">
-                  <span className="font-medium">Phase: </span>
-                  {state.turnPhase === "take_token" && "Take Token (Optional)"}
-                  {state.turnPhase === "play_card" && "Play Card"}
-                  {state.turnPhase === "execute_card" && "Execute Card"}
+                  <span className="font-medium">단계: </span>
+                  {state.turnPhase === "take_token" && "토큰 가져가기 (선택)"}
+                  {state.turnPhase === "play_card" && "카드 플레이"}
+                  {state.turnPhase === "execute_card" && "카드 실행"}
                 </div>
                 <div className="text-sm">
-                  <span className="font-medium">Available Tokens: </span>
+                  <span className="font-medium">남은 토큰: </span>
                   {state.availableTokens}
                 </div>
               </div>
@@ -107,9 +107,9 @@ export default function MainGame() {
           </div>
 
           <div className="mb-8">
-            <h2 className="text-xl font-bold text-gray-800 mb-4">Race Track</h2>
+            <h2 className="text-xl font-bold text-gray-800 mb-4">경주 트랙</h2>
             <div className="flex items-center gap-4 p-6 bg-gradient-to-r from-amber-100 to-amber-50 rounded-xl overflow-x-auto">
-              <div className="text-sm text-gray-500 font-medium whitespace-nowrap">7th</div>
+              <div className="text-sm text-gray-500 font-medium whitespace-nowrap">7등</div>
               <div className="flex gap-3">
                 {state.horses.map((horse) => {
                   const rank = getHorseRank(state.horses, horse.number);
@@ -135,41 +135,41 @@ export default function MainGame() {
                   );
                 })}
               </div>
-              <div className="text-sm text-gray-500 font-medium whitespace-nowrap">1st →</div>
+              <div className="text-sm text-gray-500 font-medium whitespace-nowrap">1등 →</div>
             </div>
           </div>
 
           {state.turnPhase === "take_token" && (
             <div className="mb-6 p-6 bg-purple-50 border-2 border-purple-200 rounded-xl">
-              <h3 className="font-bold text-purple-800 mb-3">Dark Horse Token</h3>
+              <h3 className="font-bold text-purple-800 mb-3">다크호스 토큰</h3>
               {canTakeToken ? (
                 <div className="flex gap-3">
                   <button
                     onClick={handleTakeToken}
                     className="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
                   >
-                    Take Token
+                    토큰 가져가기
                   </button>
                   <button
                     onClick={handleSkipToken}
                     className="bg-gray-400 hover:bg-gray-500 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
                   >
-                    Skip
+                    건너뛰기
                   </button>
                 </div>
               ) : (
                 <div>
-                  <p className="text-purple-700 mb-2">Cannot take token:</p>
+                  <p className="text-purple-700 mb-2">토큰을 가져갈 수 없습니다:</p>
                   <ul className="text-sm text-purple-600 list-disc list-inside">
-                    {currentPlayer.hasDarkHorseToken && <li>Already have a token</li>}
-                    {currentPlayer.actionCards.length <= 1 && <li>Only 1 card remaining</li>}
-                    {state.availableTokens <= 0 && <li>No tokens available</li>}
+                    {currentPlayer.hasDarkHorseToken && <li>이미 토큰을 가지고 있습니다</li>}
+                    {currentPlayer.actionCards.length <= 1 && <li>카드가 1장만 남았습니다</li>}
+                    {state.availableTokens <= 0 && <li>남은 토큰이 없습니다</li>}
                   </ul>
                   <button
                     onClick={handleSkipToken}
                     className="mt-3 bg-gray-400 hover:bg-gray-500 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
                   >
-                    Continue
+                    계속하기
                   </button>
                 </div>
               )}
@@ -178,7 +178,7 @@ export default function MainGame() {
 
           {state.turnPhase === "play_card" && (
             <div className="mb-6">
-              <h3 className="font-bold text-gray-800 mb-3">Your Action Cards</h3>
+              <h3 className="font-bold text-gray-800 mb-3">행동 카드</h3>
               <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 mb-4">
                 {currentPlayer.actionCards.map((card, index) => (
                   <button
@@ -194,7 +194,7 @@ export default function MainGame() {
                       {card.type === "single_movement" && (
                         <>
                           <div className="text-2xl mb-1">🏇</div>
-                          <div>Horse #{card.horseNumber}</div>
+                          <div>#{card.horseNumber}번 말</div>
                           <div className="text-xs text-gray-600">
                             {card.direction === "choice" ? "±" : card.direction === "forward" ? "+" : "-"}
                             {card.spaces}
@@ -213,13 +213,13 @@ export default function MainGame() {
                       {card.type === "rider_fall_off" && (
                         <>
                           <div className="text-2xl mb-1">💥</div>
-                          <div className="text-xs">Fall Off</div>
+                          <div className="text-xs">낙마</div>
                         </>
                       )}
                       {card.type === "exchange_betting" && (
                         <>
                           <div className="text-2xl mb-1">🔄</div>
-                          <div className="text-xs">Exchange</div>
+                          <div className="text-xs">교환</div>
                         </>
                       )}
                     </div>
@@ -231,26 +231,26 @@ export default function MainGame() {
                 disabled={selectedCardIndex === null}
                 className="w-full bg-emerald-600 hover:bg-emerald-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-bold py-4 rounded-lg transition-colors"
               >
-                Play Selected Card
+                선택한 카드 플레이
               </button>
             </div>
           )}
 
           {state.turnPhase === "execute_card" && showDirectionChoice && (
             <div className="mb-6 p-6 bg-blue-50 border-2 border-blue-200 rounded-xl">
-              <h3 className="font-bold text-blue-800 mb-3">Choose Direction</h3>
+              <h3 className="font-bold text-blue-800 mb-3">방향 선택</h3>
               <div className="flex gap-3">
                 <button
                   onClick={() => handleDirectionChoice("forward")}
                   className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 rounded-lg transition-colors"
                 >
-                  Forward ➡️
+                  앞으로 ➡️
                 </button>
                 <button
                   onClick={() => handleDirectionChoice("backward")}
                   className="flex-1 bg-red-600 hover:bg-red-700 text-white font-semibold py-4 rounded-lg transition-colors"
                 >
-                  Backward ⬅️
+                  뒤로 ⬅️
                 </button>
               </div>
             </div>
@@ -258,7 +258,7 @@ export default function MainGame() {
 
           {state.turnPhase === "execute_card" && showPlayerChoice && (
             <div className="mb-6 p-6 bg-orange-50 border-2 border-orange-200 rounded-xl">
-              <h3 className="font-bold text-orange-800 mb-3">Exchange Betting Card</h3>
+              <h3 className="font-bold text-orange-800 mb-3">베팅 카드 교환</h3>
               <div className="space-y-3">
                 {state.players.map((player) => (
                   <div key={player.id} className="bg-white p-4 rounded-lg border">
@@ -270,7 +270,7 @@ export default function MainGame() {
                           onClick={() => handlePlayerChoice(player.id, cardIndex)}
                           className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded transition-colors"
                         >
-                          Card {cardIndex + 1}
+                          카드 {cardIndex + 1}
                         </button>
                       ))}
                     </div>
@@ -286,19 +286,19 @@ export default function MainGame() {
                 onClick={handleNextTurn}
                 className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-4 px-8 rounded-lg transition-colors"
               >
-                Next Turn
+                다음 턴
               </button>
             </div>
           )}
 
           {gameOver && (
             <div className="mt-6 p-6 bg-yellow-50 border-2 border-yellow-300 rounded-xl text-center">
-              <h3 className="text-2xl font-bold text-yellow-800 mb-4">Game Over!</h3>
+              <h3 className="text-2xl font-bold text-yellow-800 mb-4">게임 종료!</h3>
               <button
                 onClick={handleEndGame}
                 className="bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-4 px-8 rounded-lg transition-colors"
               >
-                View Scores
+                점수 보기
               </button>
             </div>
           )}
@@ -315,10 +315,10 @@ export default function MainGame() {
               >
                 <div className="font-semibold text-sm">{player.name}</div>
                 <div className="text-xs text-gray-600 mt-1">
-                  Cards: {player.actionCards.length}
+                  카드: {player.actionCards.length}
                 </div>
                 {player.hasDarkHorseToken && (
-                  <div className="text-xs text-purple-600 font-semibold mt-1">🌟 Token</div>
+                  <div className="text-xs text-purple-600 font-semibold mt-1">🌟 토큰</div>
                 )}
               </div>
             ))}

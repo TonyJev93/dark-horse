@@ -24,14 +24,14 @@ export default function Scoring() {
       <div className="max-w-6xl mx-auto">
         <div className="bg-white rounded-2xl shadow-2xl p-8">
           <div className="text-center mb-8">
-            <h1 className="text-5xl font-bold text-yellow-800 mb-4">🏆 Game Over!</h1>
+            <h1 className="text-5xl font-bold text-yellow-800 mb-4">🏆 게임 종료!</h1>
             {winners.length === 1 ? (
               <p className="text-2xl text-gray-700">
-                Winner: <span className="font-bold text-yellow-600">{winners[0].playerName}</span>
+                승자: <span className="font-bold text-yellow-600">{winners[0].playerName}</span>
               </p>
             ) : (
               <p className="text-2xl text-gray-700">
-                Tie: <span className="font-bold text-yellow-600">
+                무승부: <span className="font-bold text-yellow-600">
                   {winners.map(w => w.playerName).join(", ")}
                 </span>
               </p>
@@ -39,9 +39,9 @@ export default function Scoring() {
           </div>
 
           <div className="mb-8">
-            <h2 className="text-2xl font-bold text-gray-800 mb-4">Final Race Results</h2>
+            <h2 className="text-2xl font-bold text-gray-800 mb-4">최종 경주 결과</h2>
             <div className="flex items-center gap-4 p-6 bg-gradient-to-r from-amber-100 to-amber-50 rounded-xl overflow-x-auto">
-              <div className="text-sm text-gray-500 font-medium whitespace-nowrap">7th</div>
+              <div className="text-sm text-gray-500 font-medium whitespace-nowrap">7등</div>
               <div className="flex gap-3">
                 {state.horses.map((horse) => {
                   const rank = getHorseRank(state.horses, horse.number);
@@ -58,16 +58,16 @@ export default function Scoring() {
                         <div className="text-2xl">{horse.number}</div>
                       </div>
                       <div className="mt-2 text-lg font-bold">
-                        {rank === 1 && "🥇 1st"}
-                        {rank === 2 && "🥈 2nd"}
-                        {rank === 3 && "🥉 3rd"}
-                        {rank > 3 && `${rank}th`}
+                        {rank === 1 && "🥇 1등"}
+                        {rank === 2 && "🥈 2등"}
+                        {rank === 3 && "🥉 3등"}
+                        {rank > 3 && `${rank}등`}
                       </div>
                     </div>
                   );
                 })}
               </div>
-              <div className="text-sm text-gray-500 font-medium whitespace-nowrap">1st →</div>
+              <div className="text-sm text-gray-500 font-medium whitespace-nowrap">1등 →</div>
             </div>
           </div>
 
@@ -96,13 +96,13 @@ export default function Scoring() {
                       </h3>
                     </div>
                     <div className="text-3xl font-bold text-yellow-600">
-                      {playerScore.totalScore} pts
+                      {playerScore.totalScore}점
                     </div>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <h4 className="font-semibold text-gray-700 mb-2">Betting Cards:</h4>
+                      <h4 className="font-semibold text-gray-700 mb-2">베팅 카드:</h4>
                       <div className="space-y-2">
                         {playerScore.bettingScores.map((score, idx) => (
                           <div
@@ -110,16 +110,16 @@ export default function Scoring() {
                             className="flex justify-between items-center bg-white p-3 rounded-lg"
                           >
                             <span>
-                              Horse #{score.horseNumber}
+                              #{score.horseNumber}번 말
                               {state.darkHorseNumber === score.horseNumber && " 🌟"}
                             </span>
                             <span className="font-semibold">
                               {score.rank === 1 && "🥇"}
                               {score.rank === 2 && "🥈"}
                               {score.rank === 3 && "🥉"}
-                              {score.rank > 3 && `${score.rank}th`}
+                              {score.rank > 3 && `${score.rank}등`}
                               {" = "}
-                              {score.points} pts
+                              {score.points}점
                             </span>
                           </div>
                         ))}
@@ -127,13 +127,13 @@ export default function Scoring() {
                     </div>
 
                     <div>
-                      <h4 className="font-semibold text-gray-700 mb-2">Bonuses:</h4>
+                      <h4 className="font-semibold text-gray-700 mb-2">보너스:</h4>
                       <div className="space-y-2">
                         {playerScore.hasDoubleBetting && (
                           <div className="flex justify-between items-center bg-blue-50 p-3 rounded-lg border border-blue-200">
-                            <span>Double Betting 🎯</span>
+                            <span>더블 베팅 🎯</span>
                             <span className="font-semibold text-blue-600">
-                              +{playerScore.doubleBettingBonus} pts
+                              +{playerScore.doubleBettingBonus}점
                             </span>
                           </div>
                         )}
@@ -143,19 +143,19 @@ export default function Scoring() {
                               ? "bg-purple-50 border-purple-200"
                               : "bg-red-50 border-red-200"
                           }`}>
-                            <span>Dark Horse Token 🌟</span>
+                            <span>다크호스 토큰 🌟</span>
                             <span className={`font-semibold ${
                               playerScore.darkHorseTokenBonus > 0
                                 ? "text-purple-600"
                                 : "text-red-600"
                             }`}>
                               {playerScore.darkHorseTokenBonus > 0 ? "+" : ""}
-                              {playerScore.darkHorseTokenBonus} pts
+                              {playerScore.darkHorseTokenBonus}점
                             </span>
                           </div>
                         )}
                         {!playerScore.hasDoubleBetting && !player.hasDarkHorseToken && (
-                          <div className="text-gray-400 italic p-3">No bonuses</div>
+                          <div className="text-gray-400 italic p-3">보너스 없음</div>
                         )}
                       </div>
                     </div>
@@ -170,7 +170,7 @@ export default function Scoring() {
               onClick={handleNewGame}
               className="bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-8 rounded-lg shadow-lg transition-all hover:shadow-xl hover:scale-105"
             >
-              New Game
+              새 게임
             </button>
           </div>
         </div>

@@ -28,22 +28,22 @@ export default function HorsePlacement() {
       <div className="max-w-6xl mx-auto">
         <div className="bg-white rounded-2xl shadow-2xl p-8">
           <h1 className="text-4xl font-bold text-amber-800 mb-2 text-center">
-            Horse Placement
+            말 배치하기
           </h1>
           <p className="text-center text-gray-600 mb-8">
             {isPlacementComplete ? (
-              <>All horses placed! Click Start to begin the race.</>
+              <>모든 말이 배치되었습니다! 시작 버튼을 눌러 경주를 시작하세요.</>
             ) : (
-              <>{currentPlayer.name}, place a horse on either side</>
+              <>{currentPlayer.name}님, 양쪽 중 한 곳에 말을 배치하세요</>
             )}
           </p>
 
           <div className="mb-8 flex items-center justify-center gap-4">
             {state.horses.length === 0 ? (
-              <div className="text-gray-400 text-lg">No horses placed yet</div>
+              <div className="text-gray-400 text-lg">아직 배치된 말이 없습니다</div>
             ) : (
               <>
-                <div className="text-sm text-gray-500 font-medium">7th</div>
+                <div className="text-sm text-gray-500 font-medium">7등</div>
                 <div className="flex gap-2">
                   {state.horses.map((horse) => (
                     <div
@@ -59,7 +59,7 @@ export default function HorsePlacement() {
                     </div>
                   ))}
                 </div>
-                <div className="text-sm text-gray-500 font-medium">1st →</div>
+                <div className="text-sm text-gray-500 font-medium">1등 →</div>
               </>
             )}
           </div>
@@ -67,10 +67,10 @@ export default function HorsePlacement() {
           {state.darkHorseNumber && (
             <div className="mb-8 p-4 bg-purple-100 border-2 border-purple-300 rounded-lg text-center">
               <p className="text-purple-800 font-semibold">
-                🌟 Dark Horse: #{state.darkHorseNumber}
+                🌟 다크호스: #{state.darkHorseNumber}
               </p>
               <p className="text-sm text-purple-600 mt-1">
-                Top 3: +5 points | Bottom 4: -3 points
+                상위 3등: +5점 | 하위 4등: -3점
               </p>
             </div>
           )}
@@ -79,7 +79,7 @@ export default function HorsePlacement() {
             <>
               <div className="mb-6">
                 <p className="text-sm font-medium text-gray-700 mb-3">
-                  Available Horses:
+                  배치 가능한 말:
                 </p>
                 <div className="flex gap-2 flex-wrap">
                   {availableHorses.map((horseNumber) => (
@@ -87,7 +87,7 @@ export default function HorsePlacement() {
                       key={horseNumber}
                       className="bg-gray-100 px-4 py-2 rounded-lg font-semibold text-gray-700"
                     >
-                      Horse #{horseNumber}
+                      #{horseNumber}번 말
                     </div>
                   ))}
                 </div>
@@ -103,13 +103,13 @@ export default function HorsePlacement() {
                       onClick={() => handlePlaceHorse(horseNumber, "left")}
                       className="w-full bg-amber-500 hover:bg-amber-600 text-white py-2 rounded-lg text-sm font-medium transition-colors"
                     >
-                      ← Left
+                      ← 왼쪽
                     </button>
                     <button
                       onClick={() => handlePlaceHorse(horseNumber, "right")}
                       className="w-full bg-amber-500 hover:bg-amber-600 text-white py-2 rounded-lg text-sm font-medium transition-colors"
                     >
-                      Right →
+                      오른쪽 →
                     </button>
                   </div>
                 ))}
@@ -123,7 +123,7 @@ export default function HorsePlacement() {
                 onClick={handleStartGame}
                 className="bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-8 rounded-lg shadow-lg transition-all hover:shadow-xl hover:scale-105"
               >
-                Start Game 🏁
+                게임 시작 🏁
               </button>
             </div>
           )}
